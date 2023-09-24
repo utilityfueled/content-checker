@@ -1,11 +1,24 @@
 {
   "name": "content-checker",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "AI content moderation",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "MIT"
+  "author": "Jacob Habib <jacob@utilityfueled.com> (https://github.com/jahabeebs)",
+  "license": "Apache-2.0",
+  "keywords": [
+    "content",
+    "moderation",
+    "ai",
+    "nsfw",
+    "artificial",
+    "intelligence"
+  ],
+  "homepage": "https://github.com/utilityfueled/content-checker",
+  "files": [
+    "dist"
+  ]
 }
