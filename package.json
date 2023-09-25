@@ -1,11 +1,14 @@
 {
   "name": "content-checker",
+  "type": "module",
   "version": "1.0.0",
   "description": "AI content moderation",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "test": "mocha --require ts-node/register src/test/**/*_spec.ts"
+    "build": "tsc",
+    "test": "mocha",
+    "prettier": "prettier --write ."
   },
   "author": "Jacob Habib <jacob@utilityfueled.com> (https://github.com/jahabeebs)",
   "license": "Apache-2.0",
@@ -30,6 +33,7 @@
     "@types/mocha": "^10.0.1",
     "chai": "^4.3.8",
     "mocha": "^10.2.0",
+    "prettier": "3.0.3",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2"
   }
