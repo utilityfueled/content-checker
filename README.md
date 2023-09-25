@@ -18,8 +18,8 @@ npm install content-checker
 ## Usage
 
 ```js
-var Filter = require('bad-words'),
-    filter = new Filter();
+var Filter = require("bad-words"),
+  filter = new Filter();
 
 console.log(filter.clean("Don't be an ash0le")); //Don't be an ******
 ```
@@ -27,8 +27,8 @@ console.log(filter.clean("Don't be an ash0le")); //Don't be an ******
 ### Placeholder Overrides
 
 ```js
-var Filter = require('bad-words');
-var customFilter = new Filter({ placeHolder: 'x'});
+var Filter = require("bad-words");
+var customFilter = new Filter({ placeHolder: "x" });
 
 customFilter.clean("Don't be an ash0le"); //Don't be an xxxxxx
 ```
@@ -38,59 +38,58 @@ customFilter.clean("Don't be an ash0le"); //Don't be an xxxxxx
 ```js
 var filter = new Filter({ regex: /\*|\.|$/gi });
 
-var filter = new Filter({ replaceRegex:  /[A-Za-z0-9가-힣_]/g }); 
+var filter = new Filter({ replaceRegex: /[A-Za-z0-9가-힣_]/g });
 //multilingual support for word filtering
 ```
 
 ### Add words to the blacklist
 
 ```js
-var filter = new Filter(); 
+var filter = new Filter();
 
-filter.addWords('some', 'bad', 'word');
+filter.addWords("some", "bad", "word");
 
-filter.clean("some bad word!") //**** *** ****!
+filter.clean("some bad word!"); //**** *** ****!
 
 //or use an array using the spread operator
 
-var newBadWords = ['some', 'bad', 'word'];
+var newBadWords = ["some", "bad", "word"];
 
 filter.addWords(...newBadWords);
 
-filter.clean("some bad word!") //**** *** ****!
+filter.clean("some bad word!"); //**** *** ****!
 
 //or
 
-var filter = new Filter({ list: ['some', 'bad', 'word'] }); 
+var filter = new Filter({ list: ["some", "bad", "word"] });
 
-filter.clean("some bad word!") //**** *** ****!
+filter.clean("some bad word!"); //**** *** ****!
 ```
 
 ### Instantiate with an empty list
 
 ```js
-var filter = new Filter({ emptyList: true }); 
-filter.clean('hell this wont clean anything'); //hell this wont clean anything
+var filter = new Filter({ emptyList: true });
+filter.clean("hell this wont clean anything"); //hell this wont clean anything
 ```
 
 ### Remove words from the blacklist
 
 ```js
-let filter = new Filter(); 
+let filter = new Filter();
 
-filter.removeWords('hells', 'sadist');
+filter.removeWords("hells", "sadist");
 
 filter.clean("some hells word!"); //some hells word!
 
 //or use an array using the spread operator
 
-let removeWords = ['hells', 'sadist'];
+let removeWords = ["hells", "sadist"];
 
 filter.removeWords(...removeWords);
 
 filter.clean("some sadist hells word!");
 ```
-
 
 ## Contributing
 
@@ -100,4 +99,5 @@ to discuss what you would like to change.
 Please make sure to update tests as appropriate.
 
 ## Authors
+
 - Jacob Habib (@jahabeebs)
