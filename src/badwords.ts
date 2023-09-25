@@ -1,6 +1,4 @@
 import { words as localList } from './lang';
-//@TODO add badwords-list locally
-import { array as baseList } from 'badwords-list';
 
 export class Filter {
     list: string[];
@@ -30,7 +28,7 @@ export class Filter {
         replaceRegex?: RegExp;
         splitRegex?: RegExp;
     } = {}) {
-        this.list = options.emptyList ? [] : [...localList.words, ...baseList, ...(options.list || [])];
+        this.list = options.emptyList ? [] : [...localList, ...(options.list || [])];
         this.exclude = options.exclude || [];
         this.splitRegex = options.splitRegex || /\b/;
         this.placeHolder = options.placeHolder || '*';
