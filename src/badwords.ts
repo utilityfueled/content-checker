@@ -7,9 +7,12 @@ export class Filter {
   placeHolder: string;
   regex: RegExp;
   replaceRegex: RegExp;
+  language: string;
+  apiKey: string | undefined;
+  contentCheckerAPIKey: string | undefined;
 
   /**
-   * Filter constructor.
+   * Filter constructor. To use AI functions must set in .env or pass as param: OPENAI_API_KEY or CONTENT_CHECKER_API_KEY
    * @constructor
    * @param {object} options - Filter instance options
    * @param {boolean} options.emptyList - Instantiate filter with no blacklist
@@ -28,6 +31,9 @@ export class Filter {
       regex?: RegExp;
       replaceRegex?: RegExp;
       splitRegex?: RegExp;
+      language?: string;
+      apiKey?: string;
+      contentCheckerAPIKey?: string;
     } = {},
   ) {
     this.list = options.emptyList
@@ -38,6 +44,16 @@ export class Filter {
     this.placeHolder = options.placeHolder || "*";
     this.regex = options.regex || /[^a-zA-Z0-9|$|@]|\^/g;
     this.replaceRegex = options.replaceRegex || /\w/g;
+    this.language = options.language || "english";
+    this.apiKey = process.env.OPENAI_API_KEY || options.apiKey;
+    this.contentCheckerAPIKey =
+      process.env.CONTENT_CHECKER_API_KEY || options.contentCheckerAPIKey;
+
+    if (this.apiKey && this.contentCheckerAPIKey) {
+      console.warn(
+        "Both Chat-GPT and a custom API key are set. Using Chat-GPT.",
+      );
+    }
   }
 
   /**
@@ -104,4 +120,62 @@ export class Filter {
   removeWords(...words: string[]): void {
     this.exclude.push(...words.map((word) => word.toLowerCase()));
   }
+
+  /**
+   * AI-enabled way to determine if a string contains profane language. Ensure that you've set an API key for OpenAI or content checker
+   * @param {string} word - String to evaluate for profanity.
+   */
+  async isProfaneAI(word: string): Promise<boolean> {
+    let apiKeyToUse: string;
+
+    if (this.contentCheckerAPIKey) {
+      apiKeyToUse = this.contentCheckerAPIKey;
+    } else if (this.apiKey) {
+      apiKeyToUse = this.apiKey;
+    } else {
+      throw new Error("No valid API key found.");
+    }
+
+    // @TODO: Add fine-tuned model
+    const urlToUse = this.apiKey
+      ? "https://api.openai.com/v1/engines/content-filter-alpha-c4/completions"
+      : "TBD";
+
+    const data = {
+      prompt: `Is the word "${word}" inappropriate in the context of ${this.language}? Answer either yes or no.`,
+      max_tokens: 3,
+    };
+
+    try {
+      const response = await fetch(urlToUse, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiKeyToUse}`,
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        const jsonResponse = await response.json();
+        // @TODO: coerce to boolean
+        return jsonResponse.choices[0].text.trim().toLowerCase();
+      } else {
+        console.error("Error calling OpenAI API", await response.text());
+        return false;
+      }
+    } catch (error) {
+      console.error("Error calling OpenAI API", error);
+      return false;
+    }
+  }
+
+  // @TODO: Implement with vercel openai-stream
+  // async streamWords(wordsStream: string[]) {
+  //     for (const word of wordsStream) {
+  //         if (await this.isProfaneAI(word)) {
+  //             console.log(`The word ${word} is profane.`);
+  //         }
+  //     }
+  // }
 }
