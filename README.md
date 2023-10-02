@@ -1,6 +1,6 @@
 # Content Checker
 
-Content checker is design to be a modern, open-source library for AI content moderation.
+Content checker is designed to be a modern, open-source library for AI content moderation.
 
 As of September 24th, 2023, content-checker builds on the popular [bad-words](https://www.npmjs.com/package/bad-words) package,
 but updated to TypeScript, and merging in [badwords-list](https://www.npmjs.com/package/badwords-list), which it used as a dependency.
