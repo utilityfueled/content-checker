@@ -1,11 +1,11 @@
 # Content Checker
 
-Content checker is designed to be a modern, open-source library for AI content moderation.
+Content checker is designed to be a modern, open-source library for programmatic and AI content moderation. Multimedia support is on the way.
 
-As of September 24th, 2023, content-checker builds on the popular [bad-words](https://www.npmjs.com/package/bad-words) package,
-but updated to TypeScript, and merging in [badwords-list](https://www.npmjs.com/package/badwords-list), which it used as a dependency.
+Content-checker builds on the popular [bad-words](https://www.npmjs.com/package/bad-words) package,
+but updated to use TypeScript and ES6, and merging in [badwords-list](https://www.npmjs.com/package/badwords-list), which it used as a dependency.
 
-Future work will focus on adding AI text moderation before moving on to multimedia content.
+Content checker uses code from Vercel's [AI package](https://github.com/vercel/ai)
 
 ## Installation
 
