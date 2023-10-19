@@ -1,9 +1,13 @@
 {
   "compilerOptions": {
     "module": "esnext",
+    "moduleResolution": "node",
     "target": "ES2016",
     "declaration": true,
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "types": ["@types/node", "jest"],
+    "strict": true
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
 }

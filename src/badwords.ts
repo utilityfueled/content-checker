@@ -10,6 +10,7 @@ export class Filter {
   language: string;
   apiKey: string | undefined;
   contentCheckerAPIKey: string | undefined;
+  fineTunedModelId: string | undefined;
 
   /**
    * Filter constructor. To use AI functions must set in .env or pass as param: OPENAI_API_KEY or CONTENT_CHECKER_API_KEY
@@ -48,10 +49,11 @@ export class Filter {
     this.apiKey = process.env.OPENAI_API_KEY || options.apiKey;
     this.contentCheckerAPIKey =
       process.env.CONTENT_CHECKER_API_KEY || options.contentCheckerAPIKey;
+    this.fineTunedModelId = process.env.FINE_TUNED_MODEL_ID;
 
     if (this.apiKey && this.contentCheckerAPIKey) {
       console.warn(
-        "Both Chat-GPT and a custom API key are set. Using Chat-GPT.",
+        "Both ChatGPT and a content checker API key are set. Using ChatGPT.",
       );
     }
   }
@@ -137,17 +139,15 @@ export class Filter {
     }
 
     // @TODO: Add fine-tuned model
-    const urlToUse = this.apiKey
-      ? "https://api.openai.com/v1/engines/content-filter-alpha-c4/completions"
-      : "TBD";
+    const fineTunedModel = this.fineTunedModelId || "content-filter-alpha-c4";
 
     const data = {
-      prompt: `Is the word "${word}" inappropriate in the context of ${this.language}? Answer either yes or no.`,
+      prompt: word,
       max_tokens: 3,
     };
 
     try {
-      const response = await fetch(urlToUse, {
+      const response = await fetch(fineTunedModel, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -158,8 +158,10 @@ export class Filter {
 
       if (response.ok) {
         const jsonResponse = await response.json();
-        // @TODO: coerce to boolean
-        return jsonResponse.choices[0].text.trim().toLowerCase();
+        const completionText = jsonResponse.choices[0].text
+          .trim()
+          .toLowerCase();
+        return completionText === "profane";
       } else {
         console.error("Error calling OpenAI API", await response.text());
         return false;
@@ -169,13 +171,4 @@ export class Filter {
       return false;
     }
   }
-
-  // @TODO: Implement with vercel openai-stream
-  // async streamWords(wordsStream: string[]) {
-  //     for (const word of wordsStream) {
-  //         if (await this.isProfaneAI(word)) {
-  //             console.log(`The word ${word} is profane.`);
-  //         }
-  //     }
-  // }
 }

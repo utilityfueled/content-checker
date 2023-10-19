@@ -5,7 +5,8 @@ Content checker is designed to be a modern, open-source library for programmatic
 Content-checker builds on the popular [bad-words](https://www.npmjs.com/package/bad-words) package,
 but updated to use TypeScript and ES6, and merging in [badwords-list](https://www.npmjs.com/package/badwords-list), which it used as a dependency.
 
-Content checker uses code from Vercel's [AI package](https://github.com/vercel/ai)
+Content checker uses code from Vercel's [AI package](https://github.com/vercel/ai) for interacting with OpenAI's API.
+This code is also licensed under the Apache 2.0 license.
 
 ## Installation
 
