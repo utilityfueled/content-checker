@@ -7,13 +7,10 @@ export class Filter {
   placeHolder: string;
   regex: RegExp;
   replaceRegex: RegExp;
-  language: string;
-  apiKey: string | undefined;
   contentCheckerAPIKey: string | undefined;
-  fineTunedModelId: string | undefined;
 
   /**
-   * Filter constructor. To use AI functions must set in .env or pass as param: OPENAI_API_KEY or CONTENT_CHECKER_API_KEY
+   * Filter constructor. To use AI functions must set in .env or pass as param: CONTENT_CHECKER_API_KEY
    * @constructor
    * @param {object} options - Filter instance options
    * @param {boolean} options.emptyList - Instantiate filter with no blacklist
@@ -22,6 +19,7 @@ export class Filter {
    * @param {string} options.regex - Regular expression used to sanitize words before comparing them to the blacklist.
    * @param {string} options.replaceRegex - Regular expression used to replace profane words with placeHolder.
    * @param {string} options.splitRegex - Regular expression used to split a string into words.
+   * @param {string} options.contentCheckerAPIKey - API key for Content Checker API
    */
   constructor(
     options: {
@@ -32,8 +30,6 @@ export class Filter {
       regex?: RegExp;
       replaceRegex?: RegExp;
       splitRegex?: RegExp;
-      language?: string;
-      apiKey?: string;
       contentCheckerAPIKey?: string;
     } = {},
   ) {
@@ -45,17 +41,8 @@ export class Filter {
     this.placeHolder = options.placeHolder || "*";
     this.regex = options.regex || /[^a-zA-Z0-9|$|@]|\^/g;
     this.replaceRegex = options.replaceRegex || /\w/g;
-    this.language = options.language || "english";
-    this.apiKey = process.env.OPENAI_API_KEY || options.apiKey;
     this.contentCheckerAPIKey =
       process.env.CONTENT_CHECKER_API_KEY || options.contentCheckerAPIKey;
-    this.fineTunedModelId = process.env.FINE_TUNED_MODEL_ID;
-
-    if (this.apiKey && this.contentCheckerAPIKey) {
-      console.warn(
-        "Both ChatGPT and a content checker API key are set. Using ChatGPT.",
-      );
-    }
   }
 
   /**
@@ -123,52 +110,40 @@ export class Filter {
     this.exclude.push(...words.map((word) => word.toLowerCase()));
   }
 
-  /**
-   * AI-enabled way to determine if a string contains profane language. Ensure that you've set an API key for OpenAI or content checker
-   * @param {string} word - String to evaluate for profanity.
-   */
-  async isProfaneAI(word: string): Promise<boolean> {
-    let apiKeyToUse: string;
 
-    if (this.contentCheckerAPIKey) {
-      apiKeyToUse = this.contentCheckerAPIKey;
-    } else if (this.apiKey) {
-      apiKeyToUse = this.apiKey;
-    } else {
-      throw new Error("No valid API key found.");
+  /**
+   * AI-enabled way to determine if a string contains profane language. Ensure that you've set an API key for content checker
+   * @param {string} str - String to evaluate for profanity.
+   */
+  async isProfaneAI(str: string): Promise<{ profane: boolean, type: string[] }> {
+    if (!this.contentCheckerAPIKey) {
+      console.warn(
+        "No API key found. AI functions will not work. Set in .env or pass as param: CONTENT_CHECKER_API_KEY",
+      );
+      throw new Error("Content Checker API key is not set.");
     }
 
-    // @TODO: Add fine-tuned model
-    const fineTunedModel = this.fineTunedModelId || "content-filter-alpha-c4";
-
     const data = {
-      prompt: word,
-      max_tokens: 3,
+      prompt: str,
     };
 
+    const contentCheckerAPIUrl =
+      "https://openmoderator.com/api/moderate";
+
     try {
-      const response = await fetch(fineTunedModel, {
+      const response = await fetch(contentCheckerAPIUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${apiKeyToUse}`,
+          "x-api-key": this?.contentCheckerAPIKey || "",
         },
         body: JSON.stringify(data),
       });
 
-      if (response.ok) {
-        const jsonResponse = await response.json();
-        const completionText = jsonResponse.choices[0].text
-          .trim()
-          .toLowerCase();
-        return completionText === "profane";
-      } else {
-        console.error("Error calling OpenAI API", await response.text());
-        return false;
-      }
+      return await response.json();
     } catch (error) {
-      console.error("Error calling OpenAI API", error);
-      return false;
+      console.error("Error calling Content Checker API", error);
+      throw error;
     }
   }
 }
