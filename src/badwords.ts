@@ -128,7 +128,7 @@ export class Filter {
     };
 
     const contentCheckerAPIUrl =
-      "https://openmoderator.com/api/moderate";
+      "https://openmoderator.com/api/moderate/text";
 
     try {
       const response = await fetch(contentCheckerAPIUrl, {
