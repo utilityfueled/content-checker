@@ -110,12 +110,13 @@ export class Filter {
     this.exclude.push(...words.map((word) => word.toLowerCase()));
   }
 
-
   /**
    * AI-enabled way to determine if a string contains profane language. Ensure that you've set an API key for content checker
    * @param {string} str - String to evaluate for profanity.
    */
-  async isProfaneAI(str: string): Promise<{ profane: boolean, type: string[] }> {
+  async isProfaneAI(
+    str: string,
+  ): Promise<{ profane: boolean; type: string[] }> {
     if (!this.contentCheckerAPIKey) {
       console.warn(
         "No API key found. AI functions will not work. Set in .env or pass as param: CONTENT_CHECKER_API_KEY",
@@ -127,8 +128,7 @@ export class Filter {
       prompt: str,
     };
 
-    const contentCheckerAPIUrl =
-      "https://openmoderator.com/api/moderate/text";
+    const contentCheckerAPIUrl = "https://openmoderator.com/api/moderate/text";
 
     try {
       const response = await fetch(contentCheckerAPIUrl, {
