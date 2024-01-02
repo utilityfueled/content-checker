@@ -19,7 +19,7 @@ export class Filter {
    * @param {string} options.regex - Regular expression used to sanitize words before comparing them to the blacklist.
    * @param {string} options.replaceRegex - Regular expression used to replace profane words with placeHolder.
    * @param {string} options.splitRegex - Regular expression used to split a string into words.
-   * @param {string} options.contentCheckerAPIKey - API key for Content Checker API
+   * @param {string} options.contentCheckerAPIKey - API key for OpenModerator API
    */
   constructor(
     options: {
@@ -111,7 +111,7 @@ export class Filter {
   }
 
   /**
-   * AI-enabled way to determine if a string contains profane language. Ensure that you've set an API key for content checker
+   * AI-enabled way to determine if a string contains profane language. Ensure that you've set an API key for OpenModerator
    * @param {string} str - String to evaluate for profanity.
    */
   async isProfaneAI(
@@ -121,7 +121,7 @@ export class Filter {
       console.warn(
         "No API key found. AI functions will not work. Set in .env or pass as param: OPEN_MODERATOR_API_KEY",
       );
-      throw new Error("Content Checker API key is not set.");
+      throw new Error("OpenModerator API key is not set.");
     }
 
     const data = {
@@ -142,14 +142,14 @@ export class Filter {
 
       return await response.json();
     } catch (error) {
-      console.error("Error calling Content Checker API", error);
+      console.error("Error calling OpenModerator API", error);
       throw error;
     }
   }
 
   /**
    * AI-enabled way to determine if an image contains NSFW content.
-   * Ensure that you've set an API key for content checker.
+   * Ensure that you've set an API key for OpenModerator.
    * @param {Blob} image - Image file (jpg, png) to evaluate for NSFW content.
    * @returns {Promise<{ nsfw: boolean; types: string[] }>} - Object containing NSFW flag and types of detected content ("Hentai" or "Porn")
    */
@@ -158,7 +158,7 @@ export class Filter {
       console.warn(
         "No API key found. AI functions will not work. Set in .env or pass as param: OPEN_MODERATOR_API_KEY",
       );
-      throw new Error("Content Checker API key is not set.");
+      throw new Error("OpenModerator API key is not set.");
     }
 
     const formData = new FormData();
@@ -181,7 +181,7 @@ export class Filter {
 
       return await response.json();
     } catch (error) {
-      console.error("Error calling Content Checker API", error);
+      console.error("Error calling OpenModerator API", error);
       throw error;
     }
   }
