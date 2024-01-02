@@ -28,6 +28,9 @@
   "files": [
     "dist"
   ],
+  "publishConfig": {
+    "@jahabeebs:registry": "https://npm.pkg.github.com"
+  },
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node"
