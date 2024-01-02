@@ -28,9 +28,6 @@
   "files": [
     "dist"
   ],
-  "publishConfig": {
-    "@utilityfueled:registry": "https://npm.pkg.github.com"
-  },
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node"
