@@ -5,7 +5,7 @@ Thanks to Google's Perspective API, in addition to detecting specific profane wo
 So, a user who tries to circumvent the AI profanity filter by using a variation of a profane word, or even just a malicious phrase
 without a specific word in the profanity list, will still be flagged. Image moderation is also supported, using the NSFW JS library.
 
-Future features will include more powerful models and multimedia support for moderating videos and audio
+Future features will include moderation tools (auto-ban, bots), more powerful models, and multimedia support for video and audio moderation.
 
 ## How It Works
 
@@ -15,7 +15,7 @@ but updated to use TypeScript and ES6, and merging in [badwords-list](https://ww
 The AI moderation is powered by a database of profane words, Google's Perspective API (for text analysis) and the NSFW JS library (for image analysis). The models will likely be changed in the future
 as more powerful models become available. The importance of AI moderation for text is we need to be able to detect malicious intent, not just specific words.
 
-The API returns responses in the following format for text moderation (the possible profanity types for now include "TOXICITY", "SEVERE_TOXICITY", "IDENTITY_ATTACK", "INSULT", "PROFANITY", "THREAT", and "SEXUALLY_EXPLICIT":
+The API returns responses in the following format for text moderation (the possible profanity types for now include "TOXICITY", "SEVERE_TOXICITY", "IDENTITY_ATTACK", "INSULT", "PROFANITY", "THREAT", and "SEXUALLY_EXPLICIT"). Text that has a 60% or greater probability of being in one of these categories will be flagged:
 
 Unsafe text:
 
@@ -35,7 +35,7 @@ Safe text:
 }
 ```
 
-The API returns responses in the following format for image moderation (the possible image types for now include "Porn" and "Hentai" for)
+The API returns responses in the following format for image moderation (the possible image types for now include "Porn" and "Hentai"). An image that has an over 30% chance of being in one of these NSFW categories will be flagged:
 
 Unsafe image:
 
@@ -70,6 +70,7 @@ npm install content-checker
 
 1. [Standard Text Moderation](#Standard-Text-Moderation)
 2. [AI Text Moderation](#AI-Text-Moderation)
+3. [AI Image Moderation](#AI-Image-Moderation)
 
 ## Usage
 
@@ -153,9 +154,7 @@ filter.clean("some sadist hells word!");
 
 ## AI Text Moderation
 
-To use AI moderation, ensure you have the OPEN_MODERATOR_API_KEY set in your environment variables (one can be generated for free at openmoderator.com) or passed as a parameter during the initialization of the Filter class.
-
-The OpenModerator endpoints use the latest AI models to detect unsafe text and images.
+To use AI text moderation, ensure you have the OPEN_MODERATOR_API_KEY set in your environment variables (one can be generated for free at openmoderator.com) or passed as a parameter during the initialization of the Filter class.
 
 ### Initialize a filter
 
@@ -178,6 +177,12 @@ filter.isProfaneAI("your string here").then((response) => {
   }
 });
 ```
+
+## AI Image Moderation
+
+To use AI image moderation, ensure you have the OPEN_MODERATOR_API_KEY set in your environment variables (one can be generated for free at openmoderator.com) or passed as a parameter during the initialization of the Filter class.
+For now the NSFW JS library is used for image moderation, but this will be replaced with a more powerful model in the future.
+Ensure you're uploading either a PNG or JPEG image.
 
 ### Check an image for NSFW content
 
