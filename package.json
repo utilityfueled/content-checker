@@ -2,12 +2,12 @@
   "name": "content-checker",
   "type": "module",
   "version": "1.0.4",
-  "description": "AI content moderation",
+  "description": "Open-source and modern AI content moderation",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "test": "mocha --exclude \"**/streams.test.ts\" && jest --forceExit --env node streams.test.ts",
+    "test": "mocha",
     "prettier": "prettier --write ."
   },
   "author": "Jacob Habib <jacob@utilityfueled.com> (https://github.com/jahabeebs)",

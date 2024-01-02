@@ -7,10 +7,10 @@ export class Filter {
   placeHolder: string;
   regex: RegExp;
   replaceRegex: RegExp;
-  contentCheckerAPIKey: string | undefined;
+  openModeratorAPIKey: string | undefined;
 
   /**
-   * Filter constructor. To use AI functions must set in .env or pass as param: CONTENT_CHECKER_API_KEY
+   * Filter constructor. To use AI functions must set in .env or pass as param: OPEN_MODERATOR_API_KEY
    * @constructor
    * @param {object} options - Filter instance options
    * @param {boolean} options.emptyList - Instantiate filter with no blacklist
@@ -30,7 +30,7 @@ export class Filter {
       regex?: RegExp;
       replaceRegex?: RegExp;
       splitRegex?: RegExp;
-      contentCheckerAPIKey?: string;
+      openModeratorAPIKey?: string;
     } = {},
   ) {
     this.list = options.emptyList
@@ -41,8 +41,8 @@ export class Filter {
     this.placeHolder = options.placeHolder || "*";
     this.regex = options.regex || /[^a-zA-Z0-9|$|@]|\^/g;
     this.replaceRegex = options.replaceRegex || /\w/g;
-    this.contentCheckerAPIKey =
-      process.env.CONTENT_CHECKER_API_KEY || options.contentCheckerAPIKey;
+    this.openModeratorAPIKey =
+      process.env.OPEN_MODERATOR_API_KEY || options.openModeratorAPIKey;
   }
 
   /**
@@ -117,9 +117,9 @@ export class Filter {
   async isProfaneAI(
     str: string,
   ): Promise<{ profane: boolean; type: string[] }> {
-    if (!this.contentCheckerAPIKey) {
+    if (!this.openModeratorAPIKey) {
       console.warn(
-        "No API key found. AI functions will not work. Set in .env or pass as param: CONTENT_CHECKER_API_KEY",
+        "No API key found. AI functions will not work. Set in .env or pass as param: OPEN_MODERATOR_API_KEY",
       );
       throw new Error("Content Checker API key is not set.");
     }
@@ -135,10 +135,49 @@ export class Filter {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-api-key": this?.contentCheckerAPIKey || "",
+          "x-api-key": this?.openModeratorAPIKey || "",
         },
         body: JSON.stringify(data),
       });
+
+      return await response.json();
+    } catch (error) {
+      console.error("Error calling Content Checker API", error);
+      throw error;
+    }
+  }
+
+  /**
+   * AI-enabled way to determine if an image contains NSFW content.
+   * Ensure that you've set an API key for content checker.
+   * @param {Blob} image - Image file (jpg, png) to evaluate for NSFW content.
+   * @returns {Promise<{ nsfw: boolean; types: string[] }>} - Object containing NSFW flag and types of detected content ("Hentai" or "Porn")
+   */
+  async isImageNSFW(image: Blob): Promise<{ nsfw: boolean; types: string[] }> {
+    if (!this.openModeratorAPIKey) {
+      console.warn(
+        "No API key found. AI functions will not work. Set in .env or pass as param: OPEN_MODERATOR_API_KEY",
+      );
+      throw new Error("Content Checker API key is not set.");
+    }
+
+    const formData = new FormData();
+    formData.append("file", image);
+
+    const contentCheckerAPIUrl = "https://openmoderator.com/api/moderate/image";
+
+    try {
+      const response = await fetch(contentCheckerAPIUrl, {
+        method: "POST",
+        headers: {
+          "x-api-key": this?.openModeratorAPIKey || "",
+        },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
       return await response.json();
     } catch (error) {
