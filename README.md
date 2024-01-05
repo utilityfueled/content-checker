@@ -154,7 +154,7 @@ filter.clean("some sadist hells word!");
 
 ## AI Text Moderation
 
-To use AI text moderation, ensure you have the OPEN_MODERATOR_API_KEY set in your environment variables (one can be generated for free at openmoderator.com) or passed as a parameter during the initialization of the Filter class.
+To use AI text moderation, ensure you have the OPEN_MODERATOR_API_KEY set in your environment variables (one can be generated for free at www.openmoderator.com) or passed as a parameter during the initialization of the Filter class.
 
 ### Initialize a filter
 
@@ -180,7 +180,7 @@ filter.isProfaneAI("your string here").then((response) => {
 
 ## AI Image Moderation
 
-To use AI image moderation, ensure you have the OPEN_MODERATOR_API_KEY set in your environment variables (one can be generated for free at openmoderator.com) or passed as a parameter during the initialization of the Filter class.
+To use AI image moderation, ensure you have the OPEN_MODERATOR_API_KEY set in your environment variables (one can be generated for free at www.openmoderator.com) or passed as a parameter during the initialization of the Filter class.
 For now the NSFW JS library is used for image moderation, but this will be replaced with a more powerful model in the future.
 Ensure you're uploading either a PNG or JPEG image.
 

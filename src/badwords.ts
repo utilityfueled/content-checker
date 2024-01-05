@@ -128,7 +128,8 @@ export class Filter {
       prompt: str,
     };
 
-    const contentCheckerAPIUrl = "https://openmoderator.com/api/moderate/text";
+    const contentCheckerAPIUrl =
+      "https://www.openmoderator.com/api/moderate/text";
 
     try {
       const response = await fetch(contentCheckerAPIUrl, {
@@ -164,7 +165,8 @@ export class Filter {
     const formData = new FormData();
     formData.append("file", image);
 
-    const contentCheckerAPIUrl = "https://openmoderator.com/api/moderate/image";
+    const contentCheckerAPIUrl =
+      "https://www.openmoderator.com/api/moderate/image";
 
     try {
       const response = await fetch(contentCheckerAPIUrl, {
