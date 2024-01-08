@@ -1,15 +1,15 @@
 # Content-Checker (by OpenModerator)
 
-Content-Checker is designed to be a modern, open-source library for programmatic and AI content moderation.
+`content-checker` is designed to be a modern, open-source library for programmatic and AI content moderation. Currently content-checker supports image and text moderation.
 Thanks to Google's Perspective API, in addition to detecting specific profane words, we can detect malicious **intent** in text.
 So, a user who tries to circumvent the AI profanity filter by using a variation of a profane word, or even just a malicious phrase
-without a specific word in the profanity list, will still be flagged. Image moderation is also supported, using the NSFW JS library.
+without a specific word in the profanity list, will still be flagged. Image moderation is also supported, using the Inception V3 model of the NSFW JS library.
 
 Future features will include moderation tools (auto-ban, bots), more powerful models, and multimedia support for video and audio moderation.
 
 ## How It Works
 
-Content-checker builds on the popular [bad-words](https://www.npmjs.com/package/bad-words) package,
+`content-checker` builds on the popular [bad-words](https://www.npmjs.com/package/bad-words) package,
 but updated to use TypeScript and ES6, and merging in [badwords-list](https://www.npmjs.com/package/badwords-list), which it used as a dependency.
 
 The AI moderation is powered by a database of profane words, Google's Perspective API (for text analysis) and the NSFW JS library (for image analysis). The models will likely be changed in the future
@@ -35,7 +35,7 @@ Safe text:
 }
 ```
 
-The API returns responses in the following format for image moderation (the possible image types for now include "Porn" and "Hentai"). An image that has an over 30% chance of being in one of these NSFW categories will be flagged:
+The API returns responses in the following format for image moderation (the possible image types for now include "Porn" and "Hentai"). If the highest probability category is a NSFW category like the ones mentioned then the image will be flagged as NSFW:
 
 Unsafe image:
 
@@ -60,7 +60,7 @@ The API is rate limited to 10 requests from the same IP address per 10 seconds. 
 
 ## Installation
 
-Use npm to install content-checker.
+Use npm to install `content-checker`.
 
 ```bash
 npm install content-checker
