@@ -1,5 +1,5 @@
 import { assert } from "chai";
-import { Filter } from "../badwords.js";
+import { Filter } from "../filter";
 let filter = new Filter();
 
 describe("options", function () {

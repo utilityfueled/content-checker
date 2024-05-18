@@ -50,17 +50,11 @@ export class Filter {
    * @param {string} string - String to evaluate for profanity.
    */
   isProfane(string: string): boolean {
-    return (
-      this.list.filter((word) => {
-        const wordExp = new RegExp(
-          `\\b${word.replace(/(\W)/g, "\\$1")}\\b`,
-          "gi",
-        );
-        return (
-          !this.exclude.includes(word.toLowerCase()) && wordExp.test(string)
-        );
-      }).length > 0 || false
-    );
+    return this.list.some((word) => {
+      const cleanWord = word.replace(/(\W)/g, "\\$1");
+      const wordExp = new RegExp(`\\b${cleanWord}(?:${cleanWord})*\\b`, "gi");
+      return !this.exclude.includes(word.toLowerCase()) && wordExp.test(string);
+    });
   }
 
   /**
@@ -78,12 +72,14 @@ export class Filter {
    * @param {string} string - Sentence to filter.
    */
   clean(string: string): string {
-    return string
-      .split(this.splitRegex)
+    if (string === "") return "";
+    const words = string.split(this.splitRegex);
+    const delimiter = this.splitRegex.exec(string)?.[0] || "";
+    return words
       .map((word) => {
         return this.isProfane(word) ? this.replaceWord(word) : word;
       })
-      .join(this.splitRegex.exec(string)![0]);
+      .join(delimiter);
   }
 
   /**
