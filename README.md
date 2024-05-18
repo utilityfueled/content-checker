@@ -83,7 +83,7 @@ npm install content-checker
 
 ```js
 import { Filter } from "content-checker";
-// Or for CommonJS use 
+// Or for CommonJS: const { Filter } = require('content-checker');
 const filter = new Filter();
 
 console.log(filter.clean("Don't be an ash0le")); //Don't be an ******
