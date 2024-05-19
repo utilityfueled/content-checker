@@ -10,6 +10,7 @@ without a specific word in the profanity list, will still be flagged. Image mode
 
 Future features will include moderation tools (auto-ban, bots), more powerful models, and multimedia support for video and audio moderation.
 
+
 ## How It Works
 
 `content-checker` builds on the popular [bad-words](https://www.npmjs.com/package/bad-words) package,
