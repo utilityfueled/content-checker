@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { Filter } from "../badwords.js";
+import { Filter } from "../filter";
 
 describe("filter", function () {
   describe("addWords", function () {

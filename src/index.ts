@@ -1,1 +1,1 @@
-export { Filter } from "./badwords";
+export { Filter } from "./filter";
