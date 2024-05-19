@@ -3,6 +3,7 @@
 ![Release Content Checker](https://github.com/utilityfueled/content-checker/actions/workflows/release-package.yml/badge.svg)
 [![npm](https://img.shields.io/npm/v/content-checker.svg)](https://www.npmjs.com/package/content-checker)
 
+
 `content-checker` is designed to be a modern, open-source library for programmatic and AI content moderation. Currently content-checker supports image and text moderation.
 Thanks to Google's Perspective API, in addition to detecting specific profane words, we can detect malicious **intent** in text.
 So, a user who tries to circumvent the AI profanity filter by using a variation of a profane word, or even just a malicious phrase
