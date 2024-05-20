@@ -3,7 +3,6 @@
 ![Release Content Checker](https://github.com/utilityfueled/content-checker/actions/workflows/release-package.yml/badge.svg)
 [![npm](https://img.shields.io/npm/v/content-checker.svg)](https://www.npmjs.com/package/content-checker)
 
-
 `content-checker` is designed to be a modern, open-source library for programmatic and AI content moderation. Currently content-checker supports image and text moderation.
 Thanks to Google's Perspective API, in addition to detecting specific profane words, we can detect malicious **intent** in text.
 So, a user who tries to circumvent the AI profanity filter by using a variation of a profane word, or even just a malicious phrase
@@ -174,7 +173,14 @@ const filter = new Filter({ openModeratorAPIKey: "your_api_key_here" });
 The isProfaneAI method checks if a string contains profane language using AI. It returns a promise that resolves to an object containing a profane boolean and a type array which lists the categories of profanity detected (e.g., "harassment").
 
 ```js
-filter.isProfaneAI("your string here").then((response) => {
+const config = {
+  // checkManualProfanityList is optional and defaults to true; it checks for the words in lang.ts (if under 50 words) before hitting the AI model
+  checkManualProfanityList: true,
+  // provider is optional and defaults to "google" (Perspective API); it can be "openai" (OpenAI Moderation API) or "google"
+  provider: "google",
+};
+
+filter.isProfaneAI("your string here", config).then((response) => {
   if (response.profane) {
     console.log("Profanity found. Types: ", response.type.join(", "));
   } else {
