@@ -1,4 +1,5 @@
 import { words as localList } from "./lang";
+import { ProfanityCheckConfig } from "./types";
 
 export class Filter {
   list: string[];
@@ -109,9 +110,17 @@ export class Filter {
   /**
    * AI-enabled way to determine if a string contains profane language. Ensure that you've set an API key for OpenModerator
    * @param {string} str - String to evaluate for profanity.
+   * @param {ProfanityCheckConfig} config - Configuration object containing checkManualProfanityList and provider.
+   * In config: provider can be "openai" (OpenAI's Moderation API) or "google" (Google's Perspective API)
+   * In config: checkManualProfanityList is a boolean to determine if the manual profanity list in lang.ts should be checked first.
+   * @returns {Promise<{ profane: boolean; type: string[] }>} - Object containing profane flag and types of detected content ("PROFANITY")
    */
   async isProfaneAI(
     str: string,
+    config: ProfanityCheckConfig = {
+      checkManualProfanityList: true,
+      provider: "google",
+    },
   ): Promise<{ profane: boolean; type: string[] }> {
     if (!this.openModeratorAPIKey) {
       console.warn(
@@ -122,6 +131,8 @@ export class Filter {
 
     const data = {
       prompt: str,
+      checkManualProfanityList: config.checkManualProfanityList,
+      provider: config.provider,
     };
 
     const contentCheckerAPIUrl =
@@ -132,7 +143,7 @@ export class Filter {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-api-key": this?.openModeratorAPIKey || "",
+          "x-api-key": this.openModeratorAPIKey || "",
         },
         body: JSON.stringify(data),
       });

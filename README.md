@@ -173,7 +173,14 @@ const filter = new Filter({ openModeratorAPIKey: "your_api_key_here" });
 The isProfaneAI method checks if a string contains profane language using AI. It returns a promise that resolves to an object containing a profane boolean and a type array which lists the categories of profanity detected (e.g., "harassment").
 
 ```js
-filter.isProfaneAI("your string here").then((response) => {
+const config = {
+  // checkManualProfanityList is optional and defaults to true; it checks for the words in lang.ts (if under 50 words) before hitting the AI model
+  checkManualProfanityList: true,
+  // provider is optional and defaults to "google" (Perspective API); it can be "openai" (OpenAI Moderation API) or "google"
+  provider: "google",
+};
+
+filter.isProfaneAI("your string here", config).then((response) => {
   if (response.profane) {
     console.log("Profanity found. Types: ", response.type.join(", "));
   } else {
