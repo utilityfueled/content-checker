@@ -4,7 +4,7 @@
 [![npm](https://img.shields.io/npm/v/content-checker.svg)](https://www.npmjs.com/package/content-checker)
 
 `content-checker` is designed to be a modern, open-source library for programmatic and AI content moderation. Currently content-checker supports image and text moderation.
-Thanks to Google's Perspective API, in addition to detecting specific profane words, we can detect malicious **intent** in text.
+Thanks to LLMs in addition to detecting specific profane words, we can detect malicious **intent** in text.
 So, a user who tries to circumvent the AI profanity filter by using a variation of a profane word, or even just a malicious phrase
 without a specific word in the profanity list, will still be flagged. Image moderation is also supported, using the Inception V3 model of the NSFW JS library.
 
@@ -15,10 +15,12 @@ Future features will include moderation tools (auto-ban, bots), more powerful mo
 `content-checker` builds on the popular [bad-words](https://www.npmjs.com/package/bad-words) package,
 but updated to use TypeScript and ES6, and merging in [badwords-list](https://www.npmjs.com/package/badwords-list), which it used as a dependency.
 
-The AI moderation is powered by a database of profane words, Google's Perspective API (for text analysis) and the NSFW JS library (for image analysis). The models will likely be changed in the future
-as more powerful models become available. The importance of AI moderation for text is we need to be able to detect malicious intent, not just specific words.
+The AI moderation is powered by a database of profane words, multiple LLMs for text analysis, and the NSFW JS library for image analysis.
+The models will likely be changed in the future as more powerful models become available.
+The importance of AI moderation for text is we need to be able to detect malicious intent, not just specific words.
 
-The API returns responses in the following format for text moderation (the possible profanity types for now include "TOXICITY", "SEVERE_TOXICITY", "IDENTITY_ATTACK", "INSULT", "PROFANITY", "THREAT", and "SEXUALLY_EXPLICIT"). Text that has a 60% or greater probability of being in one of these categories will be flagged:
+The API will return whether text is profane or not, but note that different types of profanity can be detected, and the
+exact types returned will depend on the model used. Currently, the hosted model uses around a 60% confidence threshold for a profanity detection when using Google's Perspective API or Google's Natural Language API.
 
 Unsafe text:
 
@@ -174,10 +176,10 @@ The isProfaneAI method checks if a string contains profane language using AI. It
 
 ```js
 const config = {
-  // checkManualProfanityList is optional and defaults to true; it checks for the words in lang.ts (if under 50 words) before hitting the AI model
-  checkManualProfanityList: true,
-  // provider is optional and defaults to "google" (Perspective API); it can be "openai" (OpenAI Moderation API) or "google"
-  provider: "google",
+  // checkManualProfanityList is optional and defaults to false; it checks for the words in lang.ts (if under 50 words) before hitting the AI model. Note that this affects performance.
+  checkManualProfanityList: false,
+  // provider defaults to "google-perspective-api" (Google's Perspective API); it can also be "openai" (OpenAI Moderation API) or "google-natural-language-api" (Google's Natural Language API)
+  provider: "google-perspective-api",
 };
 
 filter.isProfaneAI("your string here", config).then((response) => {
