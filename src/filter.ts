@@ -131,8 +131,7 @@ export class Filter {
 
     const data = {
       prompt: str,
-      checkManualProfanityList: config.checkManualProfanityList,
-      provider: config.provider,
+      config,
     };
 
     const contentCheckerAPIUrl =
